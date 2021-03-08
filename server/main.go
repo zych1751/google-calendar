@@ -14,5 +14,9 @@ func main() {
 	}
 	var googleCredentials GoogleCredentials
 	json.Unmarshal(credentialsFile, &googleCredentials)
-	fmt.Println(googleCredentials)
+
+	googleClient := NewGoogleClient(&googleCredentials)
+
+	token, _ := googleClient.GetAccessToken()
+	fmt.Println(token)
 }
