@@ -5,7 +5,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"time"
+
+	"github.com/labstack/echo/v4"
+)
+
+const (
+	port = 9000
 )
 
 func main() {
@@ -18,10 +23,8 @@ func main() {
 
 	googleClient := NewGoogleClient(&googleCredentials)
 
-	// example
-	startTime := time.Now().AddDate(0, 0, -7)
-	endTime := time.Now().AddDate(0, 0, 7)
-
-	items, err := googleClient.GetSchedule(startTime, endTime)
-	fmt.Println(items)
+	// Echo instance
+	e := echo.New()
+	e.GET("/schedule", getScheduleHandler(googleClient))
+	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", port)))
 }
