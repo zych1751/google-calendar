@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"time"
 )
 
 func main() {
@@ -17,6 +18,10 @@ func main() {
 
 	googleClient := NewGoogleClient(&googleCredentials)
 
-	token, _ := googleClient.GetAccessToken()
-	fmt.Println(token)
+	// example
+	startTime := time.Now().AddDate(0, 0, -7)
+	endTime := time.Now().AddDate(0, 0, 7)
+
+	items, err := googleClient.GetSchedule(startTime, endTime)
+	fmt.Println(items)
 }

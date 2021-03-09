@@ -30,6 +30,20 @@ type GoogleAuthResponse struct {
 	AccessToken string `json:"access_token"`
 }
 
+type GoogleCalendarResponse struct {
+	Items []GoogleCalendarItem `json:"items"`
+}
+
+type GoogleCalendarItem struct {
+	Summary string             `json:"summary"`
+	Start   GoogleCalendarTime `json:"start"`
+	End     GoogleCalendarTime `json:"end"`
+}
+
+type GoogleCalendarTime struct {
+	DateTime string `json:"dateTime"`
+}
+
 // TODO: error handling
 func (c GoogleAuthJwtClaims) Valid() error {
 	return nil
@@ -43,7 +57,39 @@ func NewGoogleClient(credentials *GoogleCredentials) *GoogleClient {
 }
 
 // TODO: make private
-func (client *GoogleClient) GetAccessToken() (string, error) {
+func (client *GoogleClient) GetSchedule(startTime time.Time, endTime time.Time) ([]GoogleCalendarItem, error) {
+	accessToken, err := client.getAccessToken()
+	if err != nil {
+		return nil, err
+	}
+
+	calendarId := "zych1751@gmail.com"
+	url := fmt.Sprintf("https://www.googleapis.com/calendar/v3/calendars/%s/events", calendarId)
+	startTimeStr := startTime.Format(time.RFC3339)
+	endTimeStr := endTime.Format(time.RFC3339)
+
+	headers := map[string]string{
+		"Content-Type":  "application/json; charset=UTF-8",
+		"Authorization": "Bearer " + accessToken,
+		"X-GFE-SSL":     "yes",
+	}
+	params := map[string]string{
+		"timeMin": startTimeStr,
+		"timeMax": endTimeStr,
+	}
+
+	httpClient := resty.New()
+	resp := GoogleCalendarResponse{}
+	_, err = httpClient.
+		R().
+		SetHeaders(headers).
+		SetQueryParams(params).
+		SetResult(&resp).
+		Get(url)
+	return resp.Items, nil
+}
+
+func (client *GoogleClient) getAccessToken() (string, error) {
 	jwt, err := client.getSignedJWT()
 	if err != nil {
 		return jwt, err
@@ -67,7 +113,7 @@ func (client *GoogleClient) getSignedJWT() (string, error) {
 	iat := time.Now()
 	token.Claims = &GoogleAuthJwtClaims{
 		Issuer:    client.credentials.ClientEmail,
-		Scope:     "https://www.googleapis.com/auth/calendar.readonly",
+		Scope:     "https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.events.readonly",
 		Audience:  "https://oauth2.googleapis.com/token",
 		IssuedAt:  iat.Unix(),
 		ExpiresAt: iat.Add(time.Second * 3600).Unix(),
