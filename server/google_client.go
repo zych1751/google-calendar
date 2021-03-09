@@ -49,6 +49,10 @@ func (c GoogleAuthJwtClaims) Valid() error {
 	return nil
 }
 
+const (
+	calendarId = "zych1751@gmail.com"
+)
+
 func NewGoogleClient(credentials *GoogleCredentials) *GoogleClient {
 	client := &GoogleClient{
 		credentials: credentials,
@@ -63,7 +67,6 @@ func (client *GoogleClient) GetSchedule(startTime time.Time, endTime time.Time) 
 		return nil, err
 	}
 
-	calendarId := "zych1751@gmail.com"
 	url := fmt.Sprintf("https://www.googleapis.com/calendar/v3/calendars/%s/events", calendarId)
 	startTimeStr := startTime.Format(time.RFC3339)
 	endTimeStr := endTime.Format(time.RFC3339)
