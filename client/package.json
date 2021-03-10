@@ -1,0 +1,22 @@
+{
+  "name": "google-calendar-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --mode development --open",
+    "build": "webpack --mode production"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "css-loader": "^5.1.1",
+    "script-loader": "^0.7.2",
+    "style-loader": "^2.0.0",
+    "tui-calendar": "^1.13.0",
+    "webpack": "^5.5.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.7.1"
+  }
+}
