@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"regexp"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -50,7 +51,9 @@ func (c GoogleAuthJwtClaims) Valid() error {
 }
 
 const (
-	calendarId = "zych1751@gmail.com"
+	calendarId      = "zych1751@gmail.com"
+	secretRuleRegex = "^!.*$"
+	secretText      = "[비밀]"
 )
 
 func NewGoogleClient(credentials *GoogleCredentials) *GoogleClient {
@@ -58,6 +61,15 @@ func NewGoogleClient(credentials *GoogleCredentials) *GoogleClient {
 		credentials: credentials,
 	}
 	return client
+}
+
+func applySecretRuleRegex(resp *GoogleCalendarResponse) {
+	for i := range resp.Items {
+		matched, _ := regexp.MatchString(secretRuleRegex, resp.Items[i].Summary)
+		if matched {
+			resp.Items[i].Summary = secretText
+		}
+	}
 }
 
 // TODO: make private
@@ -89,6 +101,8 @@ func (client *GoogleClient) GetSchedule(startTime time.Time, endTime time.Time) 
 		SetQueryParams(params).
 		SetResult(&resp).
 		Get(url)
+
+	applySecretRuleRegex(&resp)
 	return resp.Items, nil
 }
 
