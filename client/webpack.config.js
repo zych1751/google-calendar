@@ -1,7 +1,6 @@
 module.exports = {
   entry: [
-    './src/index.js',
-    './src/index.css'
+    './src/index.js'
   ],
   output: {
     path: __dirname,
@@ -16,22 +15,6 @@ module.exports = {
         use: {
           loader: "script-loader"
         }
-      },
-      {
-        test: /\.css$/,
-        use: [
-          {
-            loader: "style-loader"
-          },
-          {
-            loader: "css-loader",
-            options: {
-              modules: true,
-              importLoaders: 1,
-              sourceMap: true
-            }
-          }
-        ]
       }
     ]
   }
