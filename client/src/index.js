@@ -53,16 +53,31 @@ function rfc3339(d) {
 
 function getSchedulePromise(year, month) {
   var apiUrl = "https://api-schedule.zychspace.com/schedule";
-  var startDateStr = "startTime=" + encodeURIComponent(rfc3339(new Date(year, month, 1)));
+  var startDate = new Date(year, month, 1);
+  startDate.setDate(startDate.getDate() - 7);
+  var startDateStr = "startTime=" + encodeURIComponent(rfc3339(startDate));
   // Date change year and month automatically if month is 13
-  var endDateStr = "endTime=" + encodeURIComponent(rfc3339(new Date(year, month + 1, 1)));
+  var endDateStr = "endTime=" + encodeURIComponent(rfc3339(new Date(year, month + 1, 14)));
 
   var url = apiUrl + "?" + startDateStr + "&" + endDateStr;
 
   return axios.get(url);
 }
 
+function getCurrentMonth() {
+  const d = new Date();
+  const month = d.getMonth()+1;
+  return month < 10 ? "0"+month : month;
+}
+
+function getCurrentYear() {
+  const d = new Date();
+  return d.getFullYear().toString();
+}
+
 function setCalendar(year, month) {
+  document.getElementById('title').innerHTML = getCurrentYear() + "." + getCurrentMonth();
+
   document.getElementById('calendar').innerHTML = '';
   var calendar = new Calendar('#' + calendarId, {
     defaultView: 'month',
