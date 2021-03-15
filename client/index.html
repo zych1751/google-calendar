@@ -7,10 +7,52 @@
     <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css" />
     <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
     <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css" />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      #container {
+        width: 100%;
+        height: 100%;
+        float: left;
+      }
+
+      #title {
+        margin-top: 8px;
+        margin-bottom: 8px;
+        margin-left: 8px;
+      }
+
+      #calendar {
+        height: calc(100% - 100px);
+        max-height: 200%;
+      }
+
+      @media only screen and (max-width: 600px) {
+        .tui-full-calendar-weekday-schedule-bullet {
+          display: none;
+        }
+
+        .tui-full-calendar-weekday-schedule.tui-full-calendar-weekday-schedule-time .tui-full-calendar-weekday-schedule-title {
+          padding-left: 0px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1 id="title">schedule</h1>
-    <div id="calendar" style="height: 100%"></div>
+    <div id="container">
+      <h1 id="title"></h1>
+      <div id="calendar"></div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.0/moment.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>

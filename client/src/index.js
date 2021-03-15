@@ -103,4 +103,6 @@ function setCalendar(year, month) {
   });
 }
 
-setCalendar(currentYear, currentMonth);
+window.onload = function() {
+  setCalendar(currentYear, currentMonth);
+}
