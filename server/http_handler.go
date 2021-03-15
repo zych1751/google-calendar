@@ -22,8 +22,21 @@ func parseTime(startTimeStr string, endTimeStr string) (time.Time, time.Time, er
 	if diff.Hours() < 0 {
 		return time.Time{}, time.Time{}, errors.New("date range cannot be negative")
 	}
-	if diff.Hours() > 31*24 {
-		return time.Time{}, time.Time{}, errors.New("date range cannot be greater than a month")
+
+	now := time.Now()
+	currentYear, currentMonth, _ := now.Date()
+	currentLocation := now.Location()
+
+	firstDayOfMonth := time.Date(currentYear, currentMonth, 1, 0, 0, 0, 0, currentLocation)
+	lastDayOfMonth := firstDayOfMonth.AddDate(0, 1, -1)
+
+	diff = startTime.Sub(firstDayOfMonth)
+	if diff.Hours() < -15*24 {
+		return time.Time{}, time.Time{}, errors.New("startDate cannot be lower than two weeks before the first day of current Month")
+	}
+	diff = endTime.Sub(lastDayOfMonth)
+	if diff.Hours() > 15*24 {
+		return time.Time{}, time.Time{}, errors.New("endDate cannot be greater than two weeks after the last day of current Month")
 	}
 
 	return startTime, endTime, nil

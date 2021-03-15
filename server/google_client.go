@@ -72,7 +72,6 @@ func applySecretRuleRegex(resp *GoogleCalendarResponse) {
 	}
 }
 
-// TODO: make private
 func (client *GoogleClient) GetSchedule(startTime time.Time, endTime time.Time) ([]GoogleCalendarItem, error) {
 	accessToken, err := client.getAccessToken()
 	if err != nil {
